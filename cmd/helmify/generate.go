@@ -21,6 +21,8 @@ var (
 	name   string
 	secure bool
 	lint   bool
+	argocd bool
+	flux   bool
 )
 
 var generateCmd = &cobra.Command{
@@ -75,6 +77,8 @@ var generateCmd = &cobra.Command{
 		if err := generator.Generate(proj, generator.Options{
 			OutputDir: output,
 			Secure:    secure,
+			ArgoCD:    argocd,
+			Flux:      flux,
 		}); err != nil {
 			return fmt.Errorf("generating chart: %w", err)
 		}
@@ -84,8 +88,8 @@ var generateCmd = &cobra.Command{
 			mode = "secure (CIS-hardened)"
 		}
 		fmt.Printf("✓ Generated %s Helm chart %q at %s\n", mode, chartName, output)
-		fmt.Printf("  workloads: %d  services: %d  configmaps: %d  ingresses: %d\n",
-			len(proj.Workloads), len(proj.Services), len(proj.ConfigMaps), len(proj.Ingresses))
+		fmt.Printf("  workloads: %d  cronjobs: %d  services: %d  configmaps: %d  ingresses: %d\n",
+			len(proj.Workloads), len(proj.CronJobs), len(proj.Services), len(proj.ConfigMaps), len(proj.Ingresses))
 		fmt.Printf("  next: helm lint %s\n", output)
 
 		if lint {
@@ -105,6 +109,8 @@ func init() {
 	generateCmd.Flags().StringVar(&name, "name", "", "chart/project name (defaults to the input directory name)")
 	generateCmd.Flags().BoolVar(&secure, "secure", false, "apply CIS-aligned security hardening (securityContext, NetworkPolicy, etc.)")
 	generateCmd.Flags().BoolVar(&lint, "lint", false, "run 'helm lint' on the generated chart automatically (requires helm on PATH)")
+	generateCmd.Flags().BoolVar(&argocd, "argocd", false, "generate an ArgoCD Application manifest alongside the chart")
+	generateCmd.Flags().BoolVar(&flux, "flux", false, "generate a Flux HelmRelease manifest alongside the chart")
 }
 
 func runHelmLint(chartDir string) error {

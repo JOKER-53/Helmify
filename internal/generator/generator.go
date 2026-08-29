@@ -75,6 +75,13 @@ func Generate(proj *model.Project, opts Options) error {
 		}
 	}
 
+	for _, cj := range proj.CronJobs {
+		fname := fmt.Sprintf("cronjob-%s.yaml", sanitize(cj.Name))
+		if err := writeFile(filepath.Join(opts.OutputDir, "templates", fname), cronJobTemplate, cronJobView{Project: proj, CronJob: cj, Secure: opts.Secure}); err != nil {
+			return err
+		}
+	}
+
 	for _, s := range proj.Services {
 		fname := fmt.Sprintf("service-%s.yaml", sanitize(s.Name))
 		if err := writeFile(filepath.Join(opts.OutputDir, "templates", fname), serviceTemplate, serviceView{Project: proj, Service: s}); err != nil {
@@ -103,6 +110,12 @@ type workloadView struct {
 	Project  *model.Project
 	Workload model.Workload
 	Secure   bool
+}
+
+type cronJobView struct {
+	Project *model.Project
+	CronJob model.CronJob
+	Secure  bool
 }
 
 type serviceView struct {
