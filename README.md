@@ -155,9 +155,28 @@ make clean      # remove build artifacts and generated example output
 - [x] v0.3 — Dockerfile-only → minimal chart scaffold
 - [x] v0.4 — `--secure` flag with CIS hardening injectors
 - [x] v0.5 — auto-generated chart README + `--lint` integration
-- [x] v1.0 — Makefile, polished docs, tagged release
+- [x] v1.0 — Makefile, polished docs, tagged release, Cobra CLI migration
 
-Future ideas: Cosign image-signature verification hooks, Gatekeeper constraint companion charts, `helm template` dry-run output, multi-container pod support.
+**Upcoming Features (v2.0 & Beyond):**
+
+### Security & Supply Chain
+- [ ] Image Signature Verification (Cosign integration)
+- [ ] Vulnerability Scanning (Trivy/Checkov integration)
+- [ ] Gatekeeper / Kyverno companion chart generation
+
+### GitOps Integration
+- [x] `--argocd` flag to generate ArgoCD `Application` manifests
+- [x] `--flux` flag to generate Flux `HelmRelease` manifests
+
+### Kubernetes Feature Expansion
+- [x] Support for `DaemonSet`
+- [ ] Support for `CronJob`
+- [ ] Multi-container Pod support & sidecar injection
+- [ ] RBAC generation (`ServiceAccount`, `Role`, `RoleBinding`)
+- [ ] Cloud-native IAM annotations (`--aws`, `--gcp`, `--azure`)
+
+### Developer Experience
+- [ ] Interactive Terminal UI (TUI) via Bubbletea for guided chart generation
 
 ## Stack
 
