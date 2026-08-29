@@ -111,7 +111,7 @@ helmify generate --input ./manifests/ --output ./chart --secure --lint
 ```
 helmify/
 ├── cmd/
-│   └── helmify/             # CLI entrypoint (main.go)
+│   └── helmify/             # CLI entrypoint (Cobra: main.go, root.go, generate.go)
 ├── internal/
 │   ├── model/                # Shared intermediate representation
 │   ├── parser/
@@ -135,6 +135,7 @@ helmify/
 ```bash
 make build      # compile ./bin/helmify
 make examples   # regenerate + lint all example charts (smoke test)
+go test ./...   # run unit tests
 make vet        # go vet
 make fmt        # gofmt
 make clean      # remove build artifacts and generated example output
@@ -160,7 +161,8 @@ Future ideas: Cosign image-signature verification hooks, Gatekeeper constraint c
 
 ## Stack
 
-- **Go** (stdlib `flag` for CLI — no external CLI framework dependency)
+- **Go** 
+- `spf13/cobra` for robust CLI framework commands
 - `gopkg.in/yaml.v3` for YAML parsing
 
 ## License
