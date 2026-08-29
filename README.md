@@ -170,7 +170,7 @@ make clean      # remove build artifacts and generated example output
 
 ### Kubernetes Feature Expansion
 - [x] Support for `DaemonSet`
-- [ ] Support for `CronJob`
+- [x] Support for `CronJob`
 - [ ] Multi-container Pod support & sidecar injection
 - [ ] RBAC generation (`ServiceAccount`, `Role`, `RoleBinding`)
 - [ ] Cloud-native IAM annotations (`--aws`, `--gcp`, `--azure`)
