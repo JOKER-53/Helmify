@@ -18,6 +18,12 @@ type Options struct {
 	Secure    bool // when true, the hardening package is applied before writing
 	ArgoCD    bool // when true, generates ArgoCD Application manifest
 	Flux      bool // when true, generates Flux HelmRelease manifest
+	RBAC      bool // when true, generates ServiceAccount, Role, RoleBinding
+}
+
+type valuesView struct {
+	Project *model.Project
+	Options Options
 }
 
 // Generate writes a complete Helm chart for proj into opts.OutputDir.
@@ -35,7 +41,7 @@ func Generate(proj *model.Project, opts Options) error {
 	if err := writeFile(filepath.Join(opts.OutputDir, "Chart.yaml"), chartYAMLTemplate, proj); err != nil {
 		return err
 	}
-	if err := writeFile(filepath.Join(opts.OutputDir, "values.yaml"), valuesYAMLTemplate, proj); err != nil {
+	if err := writeFile(filepath.Join(opts.OutputDir, "values.yaml"), valuesYAMLTemplate, valuesView{Project: proj, Options: opts}); err != nil {
 		return err
 	}
 	if err := writeFile(filepath.Join(opts.OutputDir, ".helmignore"), helmignoreTemplate, proj); err != nil {
@@ -58,6 +64,18 @@ func Generate(proj *model.Project, opts Options) error {
 	}
 	if opts.Flux {
 		if err := writeFile(filepath.Join(opts.OutputDir, "flux-helmrelease.yaml"), fluxHelmReleaseTemplate, proj); err != nil {
+			return err
+		}
+	}
+
+	if opts.RBAC {
+		if err := writeFile(filepath.Join(opts.OutputDir, "templates", "serviceaccount.yaml"), serviceAccountTemplate, proj); err != nil {
+			return err
+		}
+		if err := writeFile(filepath.Join(opts.OutputDir, "templates", "role.yaml"), roleTemplate, proj); err != nil {
+			return err
+		}
+		if err := writeFile(filepath.Join(opts.OutputDir, "templates", "rolebinding.yaml"), roleBindingTemplate, proj); err != nil {
 			return err
 		}
 	}

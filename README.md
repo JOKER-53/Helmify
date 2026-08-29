@@ -172,7 +172,7 @@ make clean      # remove build artifacts and generated example output
 - [x] Support for `DaemonSet`
 - [x] Support for `CronJob`
 - [ ] Multi-container Pod support & sidecar injection
-- [ ] RBAC generation (`ServiceAccount`, `Role`, `RoleBinding`)
+- [x] RBAC generation (`ServiceAccount`, `Role`, `RoleBinding`)
 - [ ] Cloud-native IAM annotations (`--aws`, `--gcp`, `--azure`)
 
 ### Developer Experience

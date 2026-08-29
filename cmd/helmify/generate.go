@@ -23,6 +23,7 @@ var (
 	lint   bool
 	argocd bool
 	flux   bool
+	rbac   bool
 )
 
 var generateCmd = &cobra.Command{
@@ -79,6 +80,7 @@ var generateCmd = &cobra.Command{
 			Secure:    secure,
 			ArgoCD:    argocd,
 			Flux:      flux,
+			RBAC:      rbac,
 		}); err != nil {
 			return fmt.Errorf("generating chart: %w", err)
 		}
@@ -111,6 +113,7 @@ func init() {
 	generateCmd.Flags().BoolVar(&lint, "lint", false, "run 'helm lint' on the generated chart automatically (requires helm on PATH)")
 	generateCmd.Flags().BoolVar(&argocd, "argocd", false, "generate an ArgoCD Application manifest alongside the chart")
 	generateCmd.Flags().BoolVar(&flux, "flux", false, "generate a Flux HelmRelease manifest alongside the chart")
+	generateCmd.Flags().BoolVar(&rbac, "rbac", false, "generate ServiceAccount, Role, and RoleBinding manifests")
 }
 
 func runHelmLint(chartDir string) error {
