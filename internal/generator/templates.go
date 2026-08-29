@@ -101,7 +101,9 @@ metadata:
   labels:
     {{ "{{-" }} include "{{ .Project.Name }}.labels" . | nindent 4 {{ "}}" }}
 spec:
+{{- if ne .Workload.Kind "DaemonSet" }}
   replicas: {{ "{{" }} index .Values "{{ .Workload.Name }}" "replicaCount" {{ "}}" }}
+{{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ .Workload.Name }}
@@ -216,3 +218,52 @@ spec:
                 port:
                   number: {{ .Ingress.Port }}
 `
+
+const argocdApplicationTemplate = `apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Name }}
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/REPLACE_ME/REPLACE_ME.git'
+    path: chart
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+`
+
+const fluxHelmReleaseTemplate = `apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: {{ .Name }}
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/REPLACE_ME/REPLACE_ME.git
+  ref:
+    branch: main
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: {{ .Name }}
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: chart
+      sourceRef:
+        kind: GitRepository
+        name: {{ .Name }}
+        namespace: flux-system
+      interval: 1m
+`
+

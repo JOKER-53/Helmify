@@ -53,7 +53,7 @@ func Parse(inputDir string, projectName string) (*model.Project, error) {
 	}
 
 	if len(proj.Workloads) == 0 {
-		return nil, fmt.Errorf("no Deployment/StatefulSet resources found in %s", inputDir)
+		return nil, fmt.Errorf("no Deployment/StatefulSet/DaemonSet resources found in %s", inputDir)
 	}
 
 	return proj, nil
@@ -85,7 +85,7 @@ func parseFile(path string, proj *model.Project) error {
 
 func applyDoc(doc rawDoc, proj *model.Project) {
 	switch doc.Kind {
-	case "Deployment", "StatefulSet":
+	case "Deployment", "StatefulSet", "DaemonSet":
 		proj.Workloads = append(proj.Workloads, workloadFromRaw(doc))
 	case "Service":
 		proj.Services = append(proj.Services, serviceFromRaw(doc))

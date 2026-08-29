@@ -16,6 +16,8 @@ import (
 type Options struct {
 	OutputDir string
 	Secure    bool // when true, the hardening package is applied before writing
+	ArgoCD    bool // when true, generates ArgoCD Application manifest
+	Flux      bool // when true, generates Flux HelmRelease manifest
 }
 
 // Generate writes a complete Helm chart for proj into opts.OutputDir.
@@ -47,6 +49,17 @@ func Generate(proj *model.Project, opts Options) error {
 	}
 	if err := writeFile(filepath.Join(opts.OutputDir, "README.md"), chartReadmeTemplate, proj); err != nil {
 		return err
+	}
+
+	if opts.ArgoCD {
+		if err := writeFile(filepath.Join(opts.OutputDir, "argocd-application.yaml"), argocdApplicationTemplate, proj); err != nil {
+			return err
+		}
+	}
+	if opts.Flux {
+		if err := writeFile(filepath.Join(opts.OutputDir, "flux-helmrelease.yaml"), fluxHelmReleaseTemplate, proj); err != nil {
+			return err
+		}
 	}
 
 	for _, w := range proj.Workloads {
