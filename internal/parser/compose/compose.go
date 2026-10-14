@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/KADHIRAVANEG/helmify/internal/model"
+	"github.com/JOKER-53/Helmify/internal/model"
 	goyaml "gopkg.in/yaml.v3"
 )
 
